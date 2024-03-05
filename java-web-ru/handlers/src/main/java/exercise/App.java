@@ -9,7 +9,7 @@ public final class App {
         // BEGIN
         var app = Javalin.create();
         app.get("/phones", ctx -> ctx.json(Data.getPhones()));
-        app.get("/domains", ctx -> ctx.json(Data.getDomains()));
+        app.get("/domains", cdtx -> cdtx.json(Data.getDomains()));
 
         return app;
         // END
