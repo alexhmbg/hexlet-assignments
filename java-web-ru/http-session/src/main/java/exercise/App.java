@@ -18,10 +18,8 @@ public final class App {
         app.get("/users", ctx -> {
             var page = ctx.queryParamAsClass("page", Integer.class).getOrDefault(1);
             var per = ctx.queryParamAsClass("per", Integer.class).getOrDefault(5);
-
-            var startOfRange = per * page - per;
-            var endOfRange = per * page;
-            var result = USERS.subList(startOfRange, endOfRange);
+            var range = per * page;
+            var result = USERS.subList(range - per, range);
 
             ctx.json(result);
         });
