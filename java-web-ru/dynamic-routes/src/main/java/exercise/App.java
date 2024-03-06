@@ -27,7 +27,6 @@ public final class App {
                     .filter(map -> map.get("id").equals(companyId))
                     .findFirst()
                     .orElseThrow(() -> new NotFoundResponse("Company not found."));
-
             ctx.json(result);
         });
         // END
