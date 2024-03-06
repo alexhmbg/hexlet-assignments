@@ -26,7 +26,8 @@ public final class App {
             var result = COMPANIES.stream()
                     .filter(map -> map.get("id").equals(companyId))
                     .findFirst()
-                    .orElseThrow(() -> new NotFoundResponse("Entity with id = " + companyId + " not found"));
+                    .orElseThrow(() -> new NotFoundResponse("Company not found."));
+
             ctx.json(result);
         });
         // END
