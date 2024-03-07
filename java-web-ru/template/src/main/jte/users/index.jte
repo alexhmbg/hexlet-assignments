@@ -11,9 +11,7 @@
     <p>No users added yet</p>
 @else
     @for(var user : page.getUsers())
-        <div>
-            <h2><a href="/users/${user.getId()}">${user.getFirstName()}</a></h2>
-        </div>
+        <a href="/users/${user.getId()}">${user.getFirstName()}</a>
     @endfor
 @endif
 </body>
