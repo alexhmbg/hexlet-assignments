@@ -26,7 +26,7 @@ public final class App {
         });
 
         app.get("/users/{id}", ctx -> {
-            var id = ctx.pathParamAsClass("id", Long.class).getOrDefault(0L);
+            var id = ctx.pathParamAsClass("id", Long.class).get();
             var user = USERS.stream()
                     .filter(u -> u.getId() == id)
                     .findFirst()

@@ -14,6 +14,8 @@ public final class App {
         });
 
         app.get("/welcome", ctx -> ctx.result("Welcome to Hexlet!"));
+        app.get("/users", ctx -> ctx.result("GET /users"));
+        app.post("/users", ctx -> ctx.result("POST /users"));
 
         return app;
         // END

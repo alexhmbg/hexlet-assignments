@@ -1,28 +1,22 @@
 @import exercise.dto.users.UserPage
 @param UserPage page
 
-<html>
+<html lang="en">
 <head>
-    <title>User ${page.getUser().getId()}</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/css/bootstrap.min.css"
+          rel="stylesheet"
+          integrity="sha384-KyZXEAg3QhqLMpG8r+8fhAXLRk2vvoC2f3B09zVXn8CA5QIVfZOJ3BCsw2P0p/We"
+          crossorigin="anonymous">
+    <title>Hello Hexlet!</title>
 </head>
 <body>
-<h2><a href="/users">Users</a></h2>
-<h1>User ${page.getUser().getId()}:</h1>
-        <div>
-            <table style="width:100%", border="1px solid black">
-                <tr>
-                    <th>id</th>
-                    <th>first_name</th>
-                    <th>last_name</th>
-                    <th>email</th>
-                </tr>
-                <tr style="text-align: center">
-                    <td>${page.getUser().getId()}</td>
-                    <td>${page.getUser().getFirstName()}</td>
-                    <td>${page.getUser().getLastName()}</td>
-                    <td>${page.getUser().getEmail()}</td>
-                </tr>
-            </table>
-        </div>
+<div class="mx-auto p-4 py-md-5">
+    <main>
+        <h2>${page.getUser().getFirstName()} ${page.getUser().getLastName()}</h2>
+        <div>${page.getUser().getEmail()}</div>
+    </main>
+</div>
 </body>
 </html>
