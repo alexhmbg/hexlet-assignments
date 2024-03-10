@@ -24,7 +24,6 @@ public final class App {
         app.get("/users", ctx -> {
             var term = ctx.queryParam("term");
             List<User> result = new ArrayList<>();
-
             if (term != null) {
                 for (var user : USERS) {
                     if (startsWithIgnoreCase(user.getFirstName(), term)) {
