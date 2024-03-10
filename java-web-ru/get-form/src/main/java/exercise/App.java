@@ -7,7 +7,7 @@ import java.util.List;
 import exercise.model.User;
 import exercise.dto.users.UsersPage;
 import java.util.Collections;
-import org.apache.commons.lang3.StringUtils;
+import static org.apache.commons.lang3.StringUtils.startsWithIgnoreCase;
 
 public final class App {
 
@@ -27,7 +27,7 @@ public final class App {
 
             if (term != null) {
                 for (var user : USERS) {
-                    if (user.getFirstName().toLowerCase().startsWith(term.toLowerCase())) {
+                    if (startsWithIgnoreCase(user.getFirstName(), term)) {
                         result.add(user);
                     }
                 }
