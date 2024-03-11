@@ -32,8 +32,8 @@ public final class App {
         });
 
         app.post("/users", ctx -> {
-            var name = ctx.formParam("name").trim().toUpperCase();
-            var surname = ctx.formParam("surname").trim().toUpperCase();
+            var name = ctx.formParam("name").toUpperCase();
+            var surname = ctx.formParam("surname").toUpperCase();
             var email = ctx.formParam("email").trim().toLowerCase();
             var password = Security.encrypt(ctx.formParam("password"));
 

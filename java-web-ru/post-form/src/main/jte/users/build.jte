@@ -1,6 +1,5 @@
 @template.layout.page(
 content = @`
-    <h1>Регистрация Нового Пользователя</h1>
     <form action="/users" method="post">
         <div>
             <label>
