@@ -6,6 +6,7 @@ import java.util.Collections;
 import exercise.model.User;
 import exercise.dto.users.UsersPage;
 import exercise.repository.UserRepository;
+import org.apache.commons.lang3.StringUtils;
 import exercise.util.Security;
 
 public final class App {
@@ -32,8 +33,8 @@ public final class App {
         });
 
         app.post("/users", ctx -> {
-            var name = ctx.formParam("name").toUpperCase();
-            var surname = ctx.formParam("surname").toUpperCase();
+            var name = StringUtils.capitalize(ctx.formParam("name"));
+            var surname = StringUtils.capitalize(ctx.formParam("surname"));
             var email = ctx.formParam("email").trim().toLowerCase();
             var password = Security.encrypt(ctx.formParam("password"));
 
