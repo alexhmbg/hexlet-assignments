@@ -4,7 +4,7 @@ content = @`
         <div>
             <label>
                 Name
-                <input type="text" name="name" />
+                <input type="text" required name="name" />
             </label>
         </div>
         <div>
