@@ -43,10 +43,10 @@ public final class App {
                         .check(value ->
                                 !ArticleRepository.existsByTitle(value),
                                 "Статья с таким названием уже существует")
-                        .get();
+                        .getOrDefault("422");
                 ctx.formParamAsClass("content", String.class)
                         .check(value -> value.length() >= 10, "Статья должна быть не короче 10 символов")
-                        .get();
+                        .getOrDefault("422");
                 var article = new Article(title, content);
                 ArticleRepository.save(article);
                 ctx.redirect("/articles");
