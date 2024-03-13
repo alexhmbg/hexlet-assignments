@@ -8,7 +8,10 @@ import exercise.dto.articles.ArticlesPage;
 import exercise.dto.articles.BuildArticlePage;
 import java.util.Collections;
 
+
 import exercise.repository.ArticleRepository;
+import org.eclipse.jetty.http.HttpStatus;
+import static org.eclipse.jetty.http.HttpStatus.Code.UNPROCESSABLE_ENTITY;
 
 public final class App {
 
@@ -43,16 +46,16 @@ public final class App {
                         .check(value ->
                                 !ArticleRepository.existsByTitle(value),
                                 "Статья с таким названием уже существует")
-                        .getOrDefault("422");
+                        .get();
                 ctx.formParamAsClass("content", String.class)
                         .check(value -> value.length() >= 10, "Статья должна быть не короче 10 символов")
-                        .getOrDefault("422");
+                        .get();
                 var article = new Article(title, content);
                 ArticleRepository.save(article);
                 ctx.redirect("/articles");
             } catch (ValidationException e) {
                 var page = new BuildArticlePage(title, content, e.getErrors());
-                ctx.render("articles/build.jte", Collections.singletonMap("page", page));
+                ctx.render("articles/build.jte", Collections.singletonMap("page", page)).status(422);
             }
 
         });
