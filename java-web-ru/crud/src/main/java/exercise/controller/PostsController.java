@@ -14,25 +14,33 @@ import io.javalin.http.NotFoundResponse;
 public class PostsController {
 
     // BEGIN
+    public static void index(Context ctx) {
+        var page = ctx.queryParamAsClass("page", Integer.class).getOrDefault(1);
+        var per = 5;
+        var begin = (page - 1) * per;
+        var end = begin + per;
+        var posts = PostRepository.getEntities();
+        List<Post> sliceOfPosts;
+
+        if (begin >= posts.size()) {
+            sliceOfPosts = new ArrayList<>();
+        } else if (end > posts.size()) {
+            sliceOfPosts = posts.subList(begin, posts.size());
+        } else {
+            sliceOfPosts = posts.subList(begin, end);
+        }
+
+        var postPage = new PostsPage(sliceOfPosts, page);
+        ctx.render("posts/index.jte", Collections.singletonMap("page", postPage));
+    }
+
     public static void show(Context ctx) {
         var id = ctx.pathParamAsClass("id", Long.class).get();
         var post = PostRepository.find(id)
-                .orElseThrow(() -> new NotFoundResponse("Page not found"));
+                .orElseThrow(() -> new NotFoundResponse("Post not found"));
+
         var page = new PostPage(post);
         ctx.render("posts/show.jte", Collections.singletonMap("page", page));
-    }
-
-    public static void index(Context ctx) {
-        var pageNum = ctx.queryParamAsClass("page", Integer.class).getOrDefault(1);
-        var postsToSkip = (pageNum - 1) * 5;
-        List<Post> posts = PostRepository.getEntities()
-                .stream()
-                .skip(postsToSkip)
-                .limit(5)
-                .toList();
-
-        var page = new PostsPage(posts, pageNum);
-        ctx.render("posts/index.jte", Collections.singletonMap("page", page));
     }
     // END
 }

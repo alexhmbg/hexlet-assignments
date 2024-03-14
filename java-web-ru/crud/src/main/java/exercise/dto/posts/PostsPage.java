@@ -10,8 +10,8 @@ import lombok.Getter;
 @AllArgsConstructor
 @Getter
 public class PostsPage {
-    List<Post> posts;
-    int pageNum;
+    private List<Post> posts;
+    private int page;
 }
 // END
 
