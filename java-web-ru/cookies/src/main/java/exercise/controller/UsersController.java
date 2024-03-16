@@ -32,16 +32,14 @@ public class UsersController {
 
     public static void show(Context ctx) throws Exception {
         var id = ctx.pathParamAsClass("id", Long.class).get();
+        var token = ctx.cookie("token") == null ? null : ctx.cookie("token");
         var user = UserRepository.find(id)
                 .orElseThrow(() -> new NotFoundResponse("Entity with id = " + id + " not found"));
-        var currentToken = ctx.cookie("token");
-        var userToken = user.getToken();
-
-        if (currentToken.equals(userToken)) {
-            ctx.render("users/show.jte", Collections.singletonMap("user", user));
-        } else {
+        if (user == null || !user.getToken().equals(token)) {
             ctx.redirect(NamedRoutes.buildUserPath());
+            return;
         }
+        ctx.render("users/show.jte", Collections.singletonMap("user", user));
     }
     // END
 }
