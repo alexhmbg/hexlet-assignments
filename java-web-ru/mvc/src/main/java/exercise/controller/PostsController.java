@@ -62,13 +62,13 @@ public class PostsController {
         var id = ctx.pathParamAsClass("id", Long.class).get();
         var post = PostRepository.find(id)
                 .orElseThrow(() -> new NotFoundResponse("Post not found"));
-        var name = post.getName();
-        var body = post.getBody();
-        var page = new EditPostPage(id, name, body, null);
+
+        var page = new EditPostPage(id, post.getName(), post.getBody(), null);
         ctx.render("posts/edit.jte", Collections.singletonMap("page", page));
     }
 
     public static void update(Context ctx) {
+
         var id = ctx.pathParamAsClass("id", Long.class).get();
 
         try {
@@ -88,6 +88,7 @@ public class PostsController {
 
             PostRepository.save(post);
             ctx.redirect(NamedRoutes.postsPath());
+
         } catch (ValidationException e) {
             var name = ctx.formParam("name");
             var body = ctx.formParam("body");

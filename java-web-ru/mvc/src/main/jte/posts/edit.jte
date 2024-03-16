@@ -1,5 +1,4 @@
 @import exercise.dto.posts.EditPostPage
-@import exercise.util.NamedRoutes
 @param EditPostPage page
 
 @template.layout.page(
