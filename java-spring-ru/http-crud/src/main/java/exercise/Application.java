@@ -30,7 +30,7 @@ public class Application {
     @GetMapping("/posts")
     public List<Post> index(@RequestParam(defaultValue = "1") Integer page,
                             @RequestParam(defaultValue = "10") Integer limit) {
-        return posts.stream().skip((page - 1) * limit).limit(limit).toList();
+        return posts.stream().skip(1 - page).limit(limit).toList();
     }
 
     @PostMapping("/posts")
@@ -48,7 +48,7 @@ public class Application {
     }
 
     @PutMapping("/posts/{id}")
-    public Post update(@PathVariable String id, @RequestParam Post data) {
+    public Post update(@PathVariable String id, @RequestBody Post data) {
         var maybePost = posts.stream()
                 .filter(post -> post.getId().equals(id))
                 .findFirst();
