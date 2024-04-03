@@ -49,6 +49,7 @@ public class Application {
     @PostMapping("/posts")
     public ResponseEntity<Post> create(@RequestBody Post post) {
         posts.add(post);
+
         return ResponseEntity.status(HttpStatus.CREATED).body(post);
     }
 
@@ -60,6 +61,7 @@ public class Application {
             post.setId(data.getId());
             post.setBody(data.getBody());
             post.setTitle(data.getTitle());
+
             return ResponseEntity.ok().body(post);
         }
 
