@@ -24,21 +24,14 @@ public class Application {
 
     // BEGIN
     @Autowired
-    private UserProperties userProperties;
+    private UserProperties userInfo;
     @GetMapping("/admins")
-    public List<String> names() {
-        List<String> result = new ArrayList<>();
-
-        var emails = userProperties.getAdmins().stream().toList();
-        for (var email : emails) {
-            for (var user : users) {
-                if (user.getEmail().equals(email)) {
-                    result.add(user.getName());
-                }
-            }
-        }
-
-        return result.stream().distinct().sorted().toList();
+    public List<String> getAdmind() {
+        var admins = userInfo.getAdmins();
+        return users.stream().filter(u -> admins.contains(u.getEmail()))
+                .map(u -> u.getName())
+                .sorted()
+                .toList();
     }
     // END
 
@@ -50,8 +43,8 @@ public class Application {
     @GetMapping("/users/{id}")
     public Optional<User> show(@PathVariable Long id) {
         var user = users.stream()
-                .filter(u -> u.getId() == id)
-                .findFirst();
+            .filter(u -> u.getId() == id)
+            .findFirst();
         return user;
     }
 

@@ -1,6 +1,10 @@
 ---
 # BEGIN
-
+spring:
+  jpa:
+    show-sql: true
+server:
+  port : 7070
 # END
 
 users:
