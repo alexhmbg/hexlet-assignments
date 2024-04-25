@@ -57,7 +57,6 @@ public class PostsController {
         var commentsListDTO = comments.stream()
                 .map(this::commentDTO)
                 .collect(Collectors.toList());
-
         return commentsListDTO;
     }
 
