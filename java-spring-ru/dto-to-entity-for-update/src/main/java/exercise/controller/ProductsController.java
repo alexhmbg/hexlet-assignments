@@ -58,13 +58,14 @@ public class ProductsController {
     public ProductDTO update(@RequestBody ProductUpdateDTO productData, @PathVariable long id) {
         var product = productRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Not Found"));
-        toUpdateEntity(productData, product);
+
+        toEntity(productData, product);
         productRepository.save(product);
-        var productDTO = toDTO(product);
-        return productDTO;
+
+        return toDTO(product);
     }
 
-    private Product toUpdateEntity(ProductUpdateDTO productDto, Product product) {
+    private Product toEntity(ProductUpdateDTO productDto, Product product) {
         product.setTitle(productDto.getTitle());
         product.setPrice(productDto.getPrice());
         return product;
