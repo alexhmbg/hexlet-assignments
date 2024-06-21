@@ -2,6 +2,7 @@ package exercise;
 
 import java.net.URI;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -30,43 +31,49 @@ public class Application {
 
     // BEGIN
     @GetMapping("/posts")
-    public ResponseEntity<List<Post>> index(@RequestParam(defaultValue = "10") Integer limit) {
-        var result = posts.stream().limit(limit).toList();
-
+    public ResponseEntity<List<Post>> index() {
         return ResponseEntity.ok()
                 .header("X-Total-Count", String.valueOf(posts.size()))
-                .body(result);
+                .body(posts);
     }
-
 
     @GetMapping("/posts/{id}")
     public ResponseEntity<Post> show(@PathVariable String id) {
-        var post = posts.stream().filter(p -> p.getId().equals(id)).findFirst();
-
-        return ResponseEntity.of(post);
+        Optional<Post> maybePost = posts.stream()
+                .filter(p -> p.getId().equals(id))
+                .findFirst();
+        return ResponseEntity.of(maybePost);
     }
 
     @PostMapping("/posts")
     public ResponseEntity<Post> create(@RequestBody Post post) {
         posts.add(post);
-
-        return ResponseEntity.status(HttpStatus.CREATED).body(post);
+        URI location = URI.create("/posts");
+        return ResponseEntity.created(location).body(post);
     }
 
     @PutMapping("/posts/{id}")
     public ResponseEntity<Post> update(@PathVariable String id, @RequestBody Post data) {
-        var maybePost = posts.stream().filter(p -> p.getId().equals(id)).findFirst();
+        Optional<Post> maybePost = posts.stream()
+                .filter(p -> p.getId().equals(id))
+                .findFirst();
+        var status = HttpStatus.NO_CONTENT;
         if (maybePost.isPresent()) {
-            var post = maybePost.get();
+            Post post = maybePost.get();
+            post.setTitle(data.getTitle());
             post.setId(data.getId());
             post.setBody(data.getBody());
-            post.setTitle(data.getTitle());
-
-            return ResponseEntity.ok().body(post);
+            status = HttpStatus.OK;
         }
-
-        return ResponseEntity.status(HttpStatus.NO_CONTENT).body(data);
+        return ResponseEntity.status(status).body(data);
     }
+
+    // Реализуйте полный CRUD сущности Post по аналогии с тем, как мы делали это в в прошлом уроке.
+    // На этот раз вам необходимо реализовать маршруты с использованием ResponseEntity и с помощью него модифицировать статусы ответов и заголовки:
+    //GET /posts — список всех постов. Должен возвращаться статус 200 и заголовок X-Total-Count, в котором содержится количество постов
+    //GET /posts/{id} – просмотр конкретного поста. Если пост найден, должен возвращаться статус 200, если нет — статус 404
+    //POST /posts – создание нового поста. Должен возвращаться статус 201
+    //PUT /posts/{id} – Обновление поста. Должен возвращаться статус 200. Если пост уже не существует, то должен возвращаться 204
     // END
 
     @DeleteMapping("/posts/{id}")
