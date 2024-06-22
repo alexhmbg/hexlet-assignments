@@ -7,6 +7,7 @@ import jakarta.persistence.Table;
 import static jakarta.persistence.GenerationType.IDENTITY;
 import lombok.Getter;
 import lombok.Setter;
+import org.springframework.stereotype.Component;
 
 // BEGIN
 @Entity
@@ -14,10 +15,12 @@ import lombok.Setter;
 @Getter
 @Setter
 public class Person {
+
     @Id
     @GeneratedValue(strategy = IDENTITY)
-    Long id;
-    String firstName;
-    String lastName;
+    private long id;
+
+    private String firstName;
+    private String lastName;
 }
 // END

@@ -21,9 +21,8 @@ repositories {
 
 dependencies {
     // BEGIN
-    dependencies {
-        runtimeOnly("com.h2database:h2")
-    }
+    runtimeOnly("com.h2database:h2")
+    testImplementation("com.h2database:h2:2.2.224")
     // END
     implementation("org.springframework.boot:spring-boot-starter")
     implementation("org.springframework.boot:spring-boot-starter-web")
