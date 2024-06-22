@@ -24,10 +24,13 @@ public class ProductsController {
 
     // BEGIN
     @GetMapping()
-    public List<Product> index(@RequestParam(defaultValue = "0") int min, @RequestParam(defaultValue = "999") int max) {
-        return productRepository.findByPriceBetweenOrderByPrice(min, max);
+    public List<Product> index(
+            @RequestParam(defaultValue = Integer.MIN_VALUE + "") Integer min,
+            @RequestParam(defaultValue = Integer.MAX_VALUE + "") Integer max) {
+
+        var sort = Sort.by(Sort.Order.asc("price"));
+        return productRepository.findByPriceBetween(min, max, sort);
     }
-    // END
 
     @GetMapping(path = "/{id}")
     public Product show(@PathVariable long id) {
