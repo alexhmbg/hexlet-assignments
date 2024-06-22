@@ -52,7 +52,6 @@ public class ProductsController {
 
         product.setPrice(data.getPrice());
         product.setTitle(data.getTitle());
-
         productRepository.save(product);
 
         return product;
