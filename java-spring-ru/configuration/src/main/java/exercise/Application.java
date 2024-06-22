@@ -1,9 +1,7 @@
 package exercise;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Stream;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -24,13 +22,13 @@ public class Application {
 
     // BEGIN
     @Autowired
-    private UserProperties userInfo;
+    private UserProperties userProperties;
+
     @GetMapping("/admins")
-    public List<String> getAdmind() {
-        var admins = userInfo.getAdmins();
-        return users.stream().filter(u -> admins.contains(u.getEmail()))
-                .map(u -> u.getName())
-                .sorted()
+    public List<String> admins() {
+        return users.stream()
+                .filter(user -> userProperties.getAdmins().contains(user.getEmail()))
+                .map(User::getName)
                 .toList();
     }
     // END
