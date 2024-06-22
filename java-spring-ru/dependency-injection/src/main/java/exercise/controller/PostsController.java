@@ -22,8 +22,10 @@ import exercise.exception.ResourceNotFoundException;
 @RestController
 @RequestMapping("/posts")
 public class PostsController {
+
     @Autowired
     private PostRepository postRepository;
+
     @Autowired
     private CommentRepository commentRepository;
 
@@ -33,35 +35,36 @@ public class PostsController {
     }
 
     @GetMapping("/{id}")
-    public Post show(@PathVariable long id) {
-        var post = postRepository.findById(id).orElseThrow(
-                () -> new ResourceNotFoundException("Post with id " + id + " not found"));
+    public Post show(@PathVariable Long id) {
+        Post post = postRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Post with id " + id + " not found"));
         return post;
     }
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public Post create(@RequestBody Post post) {
-        postRepository.save(post);
-        return post;
+    public Post create(Post post) {
+        return postRepository.save(post);
     }
 
     @PutMapping("/{id}")
-    public Post update(@RequestBody Post data, @PathVariable long id) {
-        var post = postRepository.findById(id).orElseThrow(
-                () -> new ResourceNotFoundException("Post with id " + id + " not found"));
+    public Post update(@PathVariable Long id, @RequestBody Post data) {
+        Post post = postRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Post with id " + id + " not found"));
+
         post.setBody(data.getBody());
         post.setTitle(data.getTitle());
-        postRepository.save(post);
-        return data;
+
+        return postRepository.save(post);
     }
 
     @DeleteMapping("/{id}")
-    public void delete(@PathVariable long id) {
-        var post = postRepository.findById(id).orElseThrow(
-                () -> new ResourceNotFoundException("Post with id " + id + " not found"));
-        postRepository.delete(post);
+    public void delete(@PathVariable Long id) {
+        Post post = postRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Post with id " + id + " not found"));
+
         commentRepository.deleteByPostId(post.getId());
+        postRepository.delete(post);
     }
 }
 // END

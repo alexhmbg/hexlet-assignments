@@ -33,34 +33,34 @@ public class CommentsController {
     }
 
     @GetMapping("/{id}")
-    public Comment show(@PathVariable long id) {
-        var comment = commentRepository.findById(id).orElseThrow(
-                () -> new ResourceNotFoundException("Comment with id " + id + " not found"));
+    public Comment show(@PathVariable Long id) {
+        Comment comment = commentRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Comment with id " + id + " not found"));
         return comment;
     }
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public Comment create(@RequestBody Comment comment) {
-        commentRepository.save(comment);
-        return comment;
+    public Comment create(Comment comment) {
+        return commentRepository.save(comment);
     }
 
     @PutMapping("/{id}")
-    public Comment update(@RequestBody Comment data, @PathVariable long id) {
-        var comment = commentRepository.findById(id).orElseThrow(
-                () -> new ResourceNotFoundException("Comment with id " + id + " not found"));
-        comment.setPostId(data.getPostId());
+    public Comment update(@PathVariable Long id, @RequestBody Comment data) {
+        Comment comment = commentRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Comment with id " + id + " not found"));
+
         comment.setBody(data.getBody());
-        commentRepository.save(comment);
-        return data;
+
+        return commentRepository.save(comment);
     }
 
     @DeleteMapping("/{id}")
-    public void delete(@PathVariable long id) {
-        var comment = commentRepository.findById(id).orElseThrow(
-                () -> new ResourceNotFoundException("Comment with id " + id + " not found"));
-        commentRepository.deleteById(comment.getId());
+    public void delete(@PathVariable Long id) {
+        Comment comment = commentRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Comment with id " + id + " not found"));
+
+        commentRepository.delete(comment);
     }
 }
 // END
