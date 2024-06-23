@@ -5,6 +5,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.GetMapping;
 
+import java.lang.invoke.SwitchPoint;
+
 // BEGIN
 @RestController
 public class WelcomeController {
@@ -13,9 +15,8 @@ public class WelcomeController {
     private Daytime daytime;
 
     @GetMapping("/welcome")
-    public String show() {
-        var daytimeName = daytime.getName();
-        return String.format("It is %s now! Welcome to Spring!", daytimeName);
+    public String greet() {
+        return "It is " + daytime.getName() + " now! Welcome to Spring!";
     }
 }
 // END
