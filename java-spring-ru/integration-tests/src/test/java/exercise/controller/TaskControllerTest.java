@@ -58,7 +58,7 @@ class ApplicationTest {
                 .andExpect(status().isOk())
                 .andReturn();
 
-        String body = result.getResponse().getContentAsString();
+        var body = result.getResponse().getContentAsString();
         assertThatJson(body).isArray();
     }
 
@@ -77,34 +77,33 @@ class ApplicationTest {
         var task = generateTask();
         taskRepository.save(task);
 
-        var request = get("/tasks/{id}", task.getId());
+        var request = get("/tasks/" + task.getId());
         var result = mockMvc.perform(request)
                 .andExpect(status().isOk())
                 .andReturn();
-        var body = result.getResponse().getContentAsString();
 
-        assertThatJson(body).and(
-                v -> v.node("title").isEqualTo(task.getTitle()),
-                v -> v.node("description").isEqualTo(task.getDescription())
-        );
+        var body = result.getResponse().getContentAsString();
+        assertThatJson(body).isObject().containsEntry("id", task.getId());
+        assertThatJson(body).isObject().containsEntry("title", task.getTitle());
+        assertThatJson(body).isObject().containsEntry("description", task.getDescription());
     }
 
     @Test
     public void testCreate() throws Exception {
-        var data = generateTask();
-
+        var newTask = generateTask();
         var request = post("/tasks")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(om.writeValueAsString(data));
+                .content(om.writeValueAsString(newTask));
 
-        mockMvc.perform(request)
-                .andExpect(status().isCreated());
+        var result = mockMvc.perform(request)
+                .andExpect(status().isCreated())
+                .andReturn();
 
-        var task = taskRepository.findByTitle(data.getTitle()).get();
-
-        assertThat(task).isNotNull();
-        assertThat(task.getTitle()).isEqualTo(data.getTitle());
-        assertThat(task.getDescription()).isEqualTo(data.getDescription());
+        var body = result.getResponse().getContentAsString();
+        var task = taskRepository.findByTitle(newTask.getTitle()).get();
+        assertThatJson(body).isObject().containsEntry("id", task.getId());
+        assertThatJson(body).isObject().containsEntry("title", task.getTitle());
+        assertThatJson(body).isObject().containsEntry("description", task.getDescription());
     }
 
     @Test
@@ -112,19 +111,21 @@ class ApplicationTest {
         var task = generateTask();
         taskRepository.save(task);
 
-        var data = new HashMap<>();
-        data.put("title", "new title");
+        var map = new HashMap<>();
+        map.put("title", "new title");
+        map.put("description", "new description");
 
-        var request = put("/tasks/{id}", task.getId())
+        var request = put("/tasks/" + task.getId())
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(om.writeValueAsString(data));
+                .content(om.writeValueAsString(map));
 
         mockMvc.perform(request)
-                .andExpect(status().isOk());
+                .andExpect(status().isOk())
+                .andReturn();
 
-        task = taskRepository.findById(task.getId()).get();
-
-        assertThat(task.getTitle()).isEqualTo(data.get("title"));
+        var newTask = taskRepository.findById(task.getId()).get();
+        assertThat(newTask.getTitle()).isEqualTo(("new title"));
+        assertThat(newTask.getDescription()).isEqualTo(("new description"));
     }
 
     @Test
@@ -132,13 +133,13 @@ class ApplicationTest {
         var task = generateTask();
         taskRepository.save(task);
 
-        var request = delete("/tasks/{id}", task.getId());
-
+        var request = delete("/tasks/" + task.getId());
         mockMvc.perform(request)
                 .andExpect(status().isOk());
 
-        task = taskRepository.findById(task.getId()).orElse(null);
-        assertThat(task).isNull();
+        var deletedTask = taskRepository.findById(task.getId()).isPresent();
+        assertThat(deletedTask).isFalse();
     }
+
     // END
 }
