@@ -21,39 +21,34 @@ public class ContactsController {
     private ContactRepository contactRepository;
 
     // BEGIN
-    @PostMapping
+    @PostMapping()
     @ResponseStatus(HttpStatus.CREATED)
     public ContactDTO create(@RequestBody ContactCreateDTO contactData) {
         var contact = toEntity(contactData);
         contactRepository.save(contact);
-        var dto = toDTO(contact);
-        return dto;
+
+        var contactDTO = toDTO(contact);
+        return contactDTO;
+    }
+
+    private Contact toEntity(ContactCreateDTO contactData) {
+        var contact = new Contact();
+        contact.setLastName(contactData.getLastName());
+        contact.setFirstName(contactData.getFirstName());
+        contact.setPhone(contactData.getPhone());
+        return contact;
     }
 
     private ContactDTO toDTO(Contact contact) {
-        var dto = new ContactDTO();
-        dto.setId(contact.getId());
-        dto.setFirstName(contact.getFirstName());
-        dto.setLastName(contact.getLastName());
-        dto.setPhone(contact.getPhone());
-        dto.setCreatedAt(contact.getCreatedAt());
-        dto.setUpdatedAt(contact.getUpdatedAt());
-        return dto;
-    }
+        var contactDTO = new ContactDTO();
+        contactDTO.setId(contact.getId());
+        contactDTO.setLastName(contact.getLastName());
+        contactDTO.setFirstName(contact.getFirstName());
+        contactDTO.setPhone(contact.getPhone());
+        contactDTO.setCreatedAt(contact.getCreatedAt());
+        contactDTO.setUpdatedAt(contact.getUpdatedAt());
 
-    private Contact toEntity(ContactCreateDTO contactDto) {
-        var contact = new Contact();
-        contact.setFirstName(contact.getFirstName());
-        contact.setLastName(contact.getLastName());
-        contact.setPhone(contact.getPhone());
-        return contact;
+        return contactDTO;
     }
     // END
 }
-//Преобразование DTO в сущность
-// В этом домашнем задании мы будем работать над приложением сохранения контактов.
-// Для упрощения будем сохранять только имя, фамилию и номер телефона.
-// Вам необходимо добавить метод сохранения нового контакта.
-//
-// Создайте в контроллере обработчик, который будет обрабатывать POST-запросы на адрес /contacts.
-// Обработчик должен принимать объект класса ContactCreateDTO и возвращать объект класса ContactDTO.
