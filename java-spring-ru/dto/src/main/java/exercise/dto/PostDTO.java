@@ -5,12 +5,13 @@ import lombok.Getter;
 import lombok.Setter;
 
 // BEGIN
-@Setter
 @Getter
+@Setter
+
 public class PostDTO {
-    long id;
-    String title;
-    String body;
-    List<CommentDTO> comments;
+    private Long id;
+    private String title;
+    private String body;
+    private List<CommentDTO> comments;
 }
 // END

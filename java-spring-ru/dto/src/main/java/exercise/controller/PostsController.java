@@ -2,12 +2,12 @@ package exercise.controller;
 
 import exercise.model.Comment;
 import exercise.repository.CommentRepository;
-import jakarta.websocket.server.PathParam;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
-
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.PathVariable;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import exercise.model.Post;
 import exercise.repository.PostRepository;
@@ -21,51 +21,65 @@ import exercise.dto.CommentDTO;
 public class PostsController {
 
     @Autowired
-    PostRepository postRepository;
+    private PostRepository postRepository;
 
     @Autowired
-    CommentRepository commentRepository;
+    private CommentRepository commentRepository;
 
-    @GetMapping
+    @GetMapping()
     public List<PostDTO> index() {
-        var posts = postRepository.findAll();
-        var result = posts.stream()
-                .map(this::postDTO)
+        List<PostDTO> result = postRepository.findAll()
+                .stream()
+                .map(this::postToDTO)
                 .toList();
         return result;
     }
 
     @GetMapping("/{id}")
-    public PostDTO show(@PathVariable long id) {
-        var post = postRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Post with id " + id + " not found"));
-        var dto = postDTO(post);
-        return dto;
+    public PostDTO show(@PathVariable Long id) {
+        var post = postRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Post with id " + id + " not found"));
+        var postDTO = postToDTO(post);
+        return postDTO;
     }
 
-    public PostDTO postDTO(Post post) {
+    private PostDTO postToDTO(Post post) {
         var dto = new PostDTO();
         dto.setId(post.getId());
         dto.setBody(post.getBody());
         dto.setTitle(post.getTitle());
-        dto.setComments(commentListDTO(post.getId()));
+
+        var comments = commentRepository.findByPostId(post.getId())
+                .stream()
+                .map(this::commentToDTO)
+                .toList();
+        dto.setComments(comments);
+
         return dto;
     }
 
-    public List<CommentDTO> commentListDTO(long postId) {
-        var comments = commentRepository.findByPostId(postId);
-        var commentsListDTO = comments.stream()
-                .map(this::commentDTO)
-                .collect(Collectors.toList());
-        return commentsListDTO;
-    }
-
-    public CommentDTO commentDTO (Comment comment) {
+    private CommentDTO commentToDTO(Comment comment) {
         var dto = new CommentDTO();
         dto.setId(comment.getId());
         dto.setBody(comment.getBody());
+
         return dto;
     }
-
 }
 // END
+//Добавьте контроллер и реализуйте в нем два маршрута для сущности Post. Необходимо реализовать следующие маршруты:
+//
+//GET /posts — cписок всех постов
+//GET /posts/{id} — просмотр конкретного поста
+//Каждый пост содержит данные о привязанных к нему комментариях. Пример возвращаемого поста:
+//
+//{
+//    "id": 3,
+//    "title": "Post Title 3",
+//    "body": "Post Body 3",
+//    "comments": [
+//        {
+//            "id": 6,
+//            "body": "Comment Body 6"
+//        }
+//    ]
+//}

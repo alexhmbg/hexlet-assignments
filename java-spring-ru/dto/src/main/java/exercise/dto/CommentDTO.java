@@ -4,10 +4,10 @@ import lombok.Getter;
 import lombok.Setter;
 
 // BEGIN
-@Setter
 @Getter
+@Setter
 public class CommentDTO {
-    long id;
-    String body;
+    private Long id;
+    private String body;
 }
 // END
