@@ -1,14 +1,17 @@
 package exercise.dto;
 
-import jakarta.validation.constraints.*;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.Future;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Pattern;
 import lombok.Getter;
 import lombok.Setter;
 
 import java.time.LocalDate;
 
 // BEGIN
-@Setter
 @Getter
+@Setter
 public class GuestCreateDTO {
     @NotBlank
     private String name;
@@ -16,7 +19,7 @@ public class GuestCreateDTO {
     @Email
     private String email;
 
-    @Pattern(regexp = "^\\+\\d{11,13}$")
+    @Pattern(regexp = "\\+[0-9]{11,13}")
     private String phoneNumber;
 
     @Pattern(regexp = "\\d{4}")

@@ -41,19 +41,20 @@ public class GuestsController {
     public GuestDTO show(@PathVariable long id) {
 
         var guest =  guestRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Guest with id " + id + " not found"));
+            .orElseThrow(() -> new ResourceNotFoundException("Guest with id " + id + " not found"));
         var guestDto = guestMapper.map(guest);
         return guestDto;
     }
 
     // BEGIN
-    @PostMapping
+    @PostMapping(path = "")
     @ResponseStatus(HttpStatus.CREATED)
     public GuestDTO create(@Valid @RequestBody GuestCreateDTO guestData) {
-            Guest guest = guestMapper.map(guestData);
-            guestRepository.save(guest);
-            var guestDTO = guestMapper.map(guest);
-            return guestDTO;
+        var guest = guestMapper.map(guestData);
+        guestRepository.save(guest);
+        var guestDto = guestMapper.map(guest);
+        return guestDto;
     }
     // END
 }
+// Создайте в контроллере обработчик, который будет обрабатывать POST-запросы на адрес */guests* и регистрировать нового гостя. Если пользователь вводит невалидные данные, должен вернуться код ответа *400 Bad request*.
