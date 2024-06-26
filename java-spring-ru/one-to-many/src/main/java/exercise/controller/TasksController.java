@@ -68,10 +68,10 @@ public class TasksController {
     public TaskDTO update(@RequestBody TaskUpdateDTO data, @PathVariable long id) {
         var task = taskRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Task with id + " + id + "not exist"));
-        var assignee = userRepository.findById(data.getAssigneeId())
+        var user = userRepository.findById(data.getAssigneeId())
                 .orElseThrow(() -> new ResourceNotFoundException("Task with id + " + id + "not exist"));
-        task.setAssignee(assignee);
         taskMapper.update(data, task);
+        task.setAssignee(user);
         taskRepository.save(task);
 
         return taskMapper.map(task);
